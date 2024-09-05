@@ -1,32 +1,36 @@
 spring:
   application:
-    name: gateway-service
+    name: gateway-server
   security:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://keycloak:8080/realms/dh
+          issuer-uri: http://keycloak:8080/realms/dhm
   cloud:
     config:
       discovery:
-        serviceId: config-service
+        serviceId: config-server
         enabled: true
     gateway:
       default-filters:
         - TokenRelay=
       routes:
-        - id: checkout-service
-          uri: lb://checkout-service
+        - id: users-service
+          uri: lb://users-service
           predicates:
-            - Path=/checkout/**
+            - Path=/users/**
           filters:
             - AddRequestHeader=X-Request-from, gateway
             - AddResponseHeader=X-Response-Red, Blue
             - StripPrefix=-1
-        - id: products-service
-          uri: lb://products-service
+        - id: account-service
+          uri: lb://account-service
           predicates:
-            - Path=/products 
+            - Path=/accounts/**
+          filters:
+            - AddRequestHeader=X-Request-from, gateway
+            - AddResponseHeader=X-Response-Red, Blue
+            - StripPrefix=-1
 server:
   port: 8085
 
