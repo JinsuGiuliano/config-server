@@ -5,7 +5,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://keycloak:8080/realms/dhm
+          issuer-uri: http://localhost:8080/realms/dhm
   cloud:
     config:
       discovery:
@@ -16,17 +16,17 @@ spring:
         - TokenRelay=
       routes:
         - id: users-service
-          uri: lb://users-service
+          uri: http://localhost:8081
           predicates:
-            - Path=/users/**
+            - Path=/api/v1/users/**
           filters:
             - AddRequestHeader=X-Request-from, gateway
             - AddResponseHeader=X-Response-Red, Blue
             - StripPrefix=-1
         - id: account-service
-          uri: lb://account-service
+          uri: http://localhost:8083
           predicates:
-            - Path=/accounts/**
+            - Path=/api/v1/accounts/**
           filters:
             - AddRequestHeader=X-Request-from, gateway
             - AddResponseHeader=X-Response-Red, Blue
